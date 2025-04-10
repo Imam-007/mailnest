@@ -14,6 +14,10 @@ import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 
 @Service
 public class EmailServiceImpl implements EmailService {
@@ -59,7 +63,7 @@ public class EmailServiceImpl implements EmailService {
             helper.setTo(to);
             helper.setSubject(subject);
             helper.setFrom("maimam8409@gmail.com");
-            helper.setText(htmlContent);
+            helper.setText(htmlContent, true);
             javaMailSender.send(simpleMailMessage);
             log.info("send html content");
         } catch (MessagingException e) {
@@ -83,6 +87,31 @@ public class EmailServiceImpl implements EmailService {
             helper.addAttachment(fileSystemResource.getFilename(), file);
             javaMailSender.send(mimeMessage);
         } catch (MessagingException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    @Override
+    public void sendEmailWithFile(String to, String subject, String message, InputStream inputStream) {
+
+        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+
+        try {
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
+            helper.setFrom("imimam8409@gmail.com");
+            helper.setTo(to);
+            helper.setText(message, true);
+            helper.setSubject(subject);
+            File file = new File("test.png");
+            Files.copy(inputStream, file.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            FileSystemResource fileSystemResource = new FileSystemResource(file);
+            helper.addAttachment(fileSystemResource.getFilename(), file);
+            javaMailSender.send(mimeMessage);
+            log.info("send mail through input stream");
+        } catch (MessagingException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
 

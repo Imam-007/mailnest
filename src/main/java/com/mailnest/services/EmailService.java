@@ -1,6 +1,7 @@
 package com.mailnest.services;
 
 import java.io.File;
+import java.io.InputStream;
 
 public interface EmailService {
 
@@ -15,4 +16,6 @@ public interface EmailService {
 
     //send file in mail
     void sendEmailWithFile(String to, String subject, String message, File file);
+
+    public void sendEmailWithFile(String to, String subject, String message, InputStream inputStream);
 }
