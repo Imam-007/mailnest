@@ -1,7 +1,7 @@
 package com.mailnest.controllers;
 
 import com.mailnest.dto.CustomResponse;
-import com.mailnest.dto.EmailResquest;
+import com.mailnest.dto.EmailRequest;
 import com.mailnest.services.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,7 +19,7 @@ public class EmailController {
     private EmailService emailService;
 
     @PostMapping("/send")
-    public ResponseEntity<?> sendEmail(@RequestBody EmailResquest emailResquest){
+    public ResponseEntity<?> sendEmail(@RequestBody EmailRequest emailResquest){
         emailService.sendEmailWithHtml(emailResquest.getTo(),
                                        emailResquest.getSubject(),
                                        emailResquest.getMessage()
@@ -33,10 +33,10 @@ public class EmailController {
         );
     }
     @PostMapping("/send-with-file")
-    public ResponseEntity<?> sendWithFile(@RequestPart EmailResquest emailResquest, @RequestPart MultipartFile file) throws IOException {
-        emailService.sendEmailWithFile(emailResquest.getTo(),
-                                        emailResquest.getSubject(),
-                                        emailResquest.getMessage(),
+    public ResponseEntity<?> sendWithFile(@RequestPart EmailRequest emailRequest, @RequestPart MultipartFile file) throws IOException {
+        emailService.sendEmailWithFile(emailRequest.getTo(),
+                                        emailRequest.getSubject(),
+                                        emailRequest.getMessage(),
                                         file.getInputStream()
         );
 
