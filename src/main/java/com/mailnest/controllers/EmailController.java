@@ -32,6 +32,7 @@ public class EmailController {
                         .success(true).build()
         );
     }
+
     @PostMapping("/send-with-file")
     public ResponseEntity<?> sendWithFile(@RequestPart EmailRequest emailRequest, @RequestPart MultipartFile file) throws IOException {
         emailService.sendEmailWithFile(emailRequest.getTo(),
